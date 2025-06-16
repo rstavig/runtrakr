@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Hills" ALTER COLUMN "best" DROP NOT NULL;

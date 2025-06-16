@@ -1,8 +1,9 @@
 "use client";
 
-
+import { SessionProvider } from "next-auth/react";
 import MainMenu from "./components/main-menu";
 import MenuTitle from "./components/menu-title";
+import LightDarkToggle from "@/components/ui/light-dark-toggle";
 // import { FaRunning } from "react-icons/fa";
 
 
@@ -13,18 +14,22 @@ export default function DashboardLayout({
   }) {
 
  return (
+  <>
+  <SessionProvider>
         <div className="md:grid md:grid-cols-[250px_1fr] h-screen">
                 <MainMenu />
                 <div className="p-4 flex justify-between md:hidden sticky top-0 left-0 bg-background border-b border-border">  
                 <MenuTitle />
-       
+                </div>
 
-     </div>
-
-        <div className="overflow-auto py-2 px-4">
-        <h1 className="pb-4">Track Bob&lsquo;s Runs</h1>
-            {children}     
+                <div className="overflow-auto py-2 px-4">
+                  {/* todo: s/b able to make this dynamic w/params */}
+                <h1 className="py-4 mb-5"></h1>
+                    {children}     
+                </div>
         </div>
-        </div>
+        </SessionProvider>
+<LightDarkToggle />
+        </>
  ) 
 }

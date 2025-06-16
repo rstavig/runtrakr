@@ -13,7 +13,7 @@ export default function MenuItem({children, href}: Props) {
     const pathname = usePathname()
 const isActive = pathname === href
 
-    return <Link className={cn("block p-2 hover:bg-white dark:hover:bg-zinc-700 rounded-md text-muted-foreground hover:text-foreground",
+    return <Link className={cn("block p-2 hover:bg-white dark:hover:bg-zinc-700 rounded-md text-muted-foreground hover:text-gray-500",
         isActive &&
             "bg-primary hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground text-primary-foreground"
     )} 

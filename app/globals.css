@@ -1,7 +1,39 @@
 @import 'tailwindcss';
+
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+/* @custom-variant dark (&:is(.dark *)); */
+
+.sidebar-main {
+  @apply text-gray-800 sticky;
+}
+
+.sidebar-list-item {
+  @apply ml-6 my-2 w-full hover:bg-blue-200 flex;
+}
+
+.sidebar-usercard {
+  @apply bottom-5 my-4 mx-2 rounded-2xl border-t-2
+  border-gray-200 hover:bg-blue-100 hover:border-b-blue-200;
+}
+
+.custom-primary-btn {
+  @apply p-3 m-1 rounded-md bg-blue-500 text-gray-50 hover:bg-blue-200 hover:text-blue-900 hover:shadow-md;
+}
+
+.custom-table {
+  @apply overflow-y-auto w-11/12 mx-auto;
+}
+.custom-table th {
+  @apply p-3;
+}
+.custom-table th,
+.custom-table td {
+  @apply px-4 py-2 text-start;
+}
+.custom-table tr {
+  @apply border-b border-gray-300;
+}
 
 @theme inline {
   --color-background: var(--background);

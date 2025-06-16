@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Poppins} from "next/font/google";
-import { cn } from '@/lib/utils'
+// import { Poppins} from "next/font/google";
+// import { cn } from '@/lib/utils'
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { LightDarkToggle } from "@/components/ui/light-dark-toggle"
 
-const poppins = Poppins({
-  subsets: ["latin"], weight: ["100","200", "300", "400", "500", "600", "700", "800", "900"]
-});
+import { Toaster } from "@/components/ui/sonner"
+
+// const poppins = Poppins({
+//   subsets: ["latin"], weight: ["100","200", "300", "400", "500", "600", "700", "800", "900"]
+// });
 
 
 
@@ -23,10 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      
-      <body
-       className={cn(poppins.className, "dark")} 
-      >
+      <body>
         <ThemeProvider
         attribute="class"
         defaultTheme="system"
@@ -34,8 +32,8 @@ export default function RootLayout({
         disableTransitionOnChange
         >
         {children}
-        </ThemeProvider>
-        <LightDarkToggle className="fixed top-[calc(50%-12px)] right-4" />
+        </ThemeProvider>     
+        <Toaster />
       </body>
     </html>
   );
