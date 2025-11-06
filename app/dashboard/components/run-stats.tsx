@@ -8,6 +8,7 @@ import { getHillCount } from "@/lib/actions/hillActions";
 import { getDotLoops } from "@/lib/actions/dotActions";
 
 import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
  export default function RunStats() {
     const [hillCount, setHillCount] = useState<number | null>(null);
@@ -110,6 +111,22 @@ import React, { useEffect, useState } from "react";
             </CardContent>
            <Link href='/dashboard/workouts/add'>
           <AddNewButton />
+          </Link>
+        </Card>
+        <Card className="border-amber-500">
+        <CardHeader>
+                <CardTitle>Test</CardTitle>
+            </CardHeader>
+            <CardContent>
+        <p>Test Page to explore various functionalities.</p>
+        <p>Current testing concerns Form functionality: useActionState, useHookForm, Shadcn, Zod validation, and more.  The goal is to develop a consistently successful method for submitting and retrieving FormData to and from a database.</p>
+            </CardContent>
+          <Link href='/dashboard/test'>
+          <div className="text-center">
+              <Button className="p-3 bg-amber-500 text-white">
+                  Test Page
+              </Button>
+              </div>
           </Link>
         </Card>
     </div>

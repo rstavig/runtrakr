@@ -5,20 +5,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from '@/components/ui/label';
 import { useActionState } from "react";
 import { createDotsRun } from '@/lib/actions/dotActions';
-import { toast } from "sonner"
-import Link from 'next/link';
+// import { toast } from "sonner"
+// import Link from 'next/link';
 
 
 
 
-export function DotsForm() {
+export function DotForm() {
+  
 
-  const [state, action, isPending] = useActionState(createDotsRun, {
-    succes: false,
-    message: "",  
-  })
+  const [state, action, isPending] = useActionState(createDotsRun, 
+    {
+      success: false,
+      message: "",
+    }
+  )
 
-  console.log(state);
+  console.log("State: " + JSON.stringify(state, null, 2));
 
 const AddDotsButton = () => {   
       return (
@@ -39,7 +42,8 @@ const AddDotsButton = () => {
           <Input
             id='daterun'
             name='daterun'
-            type='text'
+            type='Date'
+            
             className='mb-5'
           />
         </div>
@@ -88,6 +92,7 @@ const AddDotsButton = () => {
             className='mb-5'
           />
         </div>
+        
 {/* <button type="submit">Save</button> */}
 
     <AddDotsButton />   
@@ -101,5 +106,5 @@ const AddDotsButton = () => {
 
 
 
-  export default DotsForm
+  export default DotForm
 

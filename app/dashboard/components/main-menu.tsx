@@ -1,21 +1,23 @@
 
 import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+// import { auth } from '@/auth';
 import MenuItem from "./menu-item";
 import MenuTitle from "./menu-title";
 import { cn } from "@/lib/utils";
-// import { auth } from '@/auth';
 
-import { LightDarkToggle } from "@/components/ui/light-dark-toggle";
+
+// import { LightDarkToggle } from "@/components/ui/light-dark-toggle";
 import { signOutUser } from '@/lib/actions/userActions';
 
 import { SignOutButton } from "./signout-button";
 
-// const session = await auth();
 
 
 // const firstInitial = session?.user?.name?.charAt(0).toUpperCase() ?? '';
 
 export default function MainMenu({ className }: { className?: string }) {
+
+
     return (
         <nav
       className={cn(`md:bg-muted overflow-auto p-4 flex flex-col`, className)}
@@ -34,7 +36,10 @@ export default function MainMenu({ className }: { className?: string }) {
         <MenuItem href="/dashboard/dots">Dots</MenuItem>
         <MenuItem href="/dashboard/races">Races</MenuItem>
         <MenuItem href="/dashboard/workouts">Workouts</MenuItem>
+        <MenuItem href="/dashboard/test">Test Page</MenuItem>
        
+          <MenuItem href="/admin">Admin Area</MenuItem>
+        
         </div>
       </div>
         

@@ -10,19 +10,19 @@ datasource db {
 
 model Workouts {
   id          String    @id @default(dbgenerated("gen_random_uuid()"))
-  workoutDate String
+  workoutDate DateTime  @default(now())
   situps      Int
   pushups     Int
-  deadlifts   Int
-  ballrolls   Int
-  kneeups     Int
+  deadlifts   Int?
+  ballrolls   Int?
+  kneeups     Int?
   comments    String?
   createdAt   DateTime?
 }
 
 model Dots {
   id        String    @id @default(dbgenerated("gen_random_uuid()"))
-  daterun   String
+  daterun   DateTime  @default(now())
   et        String
   loops     Int
   best      String?
@@ -32,8 +32,8 @@ model Dots {
 }
 
 model Hills {
-  id       Int     @id @default(autoincrement())
-  date     String  @default("date")
+  id       Int      @id @default(autoincrement())
+  date     DateTime @db.Date()
   et       Float
   numHills Int
   best     Float?
@@ -56,4 +56,13 @@ model Session {
   userId       String   @db.Uuid
   expires      DateTime @db.Timestamp(6)
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "session_userId_user_id_fk")
+}
+
+model Test {
+  id        String   @id @default(dbgenerated("gen_random_uuid()"))
+  date      DateTime @db.Date()
+  item      String
+  qty       Int
+  comments  String
+  createdAt DateTime @default(now())
 }

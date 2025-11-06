@@ -1,22 +1,32 @@
 import Link from "next/link";
-import { prisma } from '@/db/prisma';
 import { getMyWorkouts } from "@/lib/actions/workoutActions";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import { Key } from "react";
+import { DeleteWorkoutButton } from "@/app/dashboard/components/delete-workout-button";
+import { SquarePen } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
-
-// async function getMyWorkouts() {
-//   const data = await prisma.workouts.findMany()
-//   return data
-// }
 
 
 export default async function WorkoutsPage() {
 
 const myData = await getMyWorkouts()
 
-console.log(myData);
 
-const workouts = myData
+
+const typedMyData: { id: Key | null, workoutDate: string, situps: number, pushups: number, deadlifts: number, ballrolls: number, kneeups: number, comments: string }[] | undefined = Array.isArray(myData) ? myData.map(item => ({
+            ...item,
+            id: String(item.id),
+            workoutDate: item.workoutDate instanceof Date ? item.workoutDate.toISOString().split('T')[0] : String(item.workoutDate ?? ''),
+            situps: item.situps ?? 0,
+            pushups: item.pushups ?? 0,
+            deadlifts: item.deadlifts ?? 0,
+            ballrolls: item.ballrolls ?? 0,
+            kneeups: item.kneeups ?? 0,
+            comments: item.comments ?? ''
+        }))
+        : undefined;
+
+const workouts = typedMyData
 
 
 return (
@@ -36,8 +46,8 @@ return (
   <hr />
 
   <div className="mt-20">
-                <table className="custom-table">
-                    <thead className="border-y-2 border-gray-400">
+            <table className="custom-table">
+              <thead className="border-y-2 border-gray-400">
                         <tr>
                             <th>Date</th>
                             <th>Situps</th>
@@ -46,25 +56,31 @@ return (
                             <th>Ballrolls</th>
                             <th>Kneeups</th>                        
                             <th>Comments</th>                        
+                            <th>Actions</th>                        
                         </tr>
                     </thead>
-
                     <tbody className="text-gray-700 font-medium text-lg text-center">
-
-        {workouts && workouts.map((workout: { id: Key | null | undefined; workoutDate: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; situps: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; pushups: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; deadlifts: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; ballrolls: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; kneeups: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; comments: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (           
-              <tr key={workout.id}>    
-                
-                <td>{workout.workoutDate}</td>
+                {workouts && workouts.map((workout, id) => (           
+              <tr key={workout.id && id}>    
+                <td>
+                {typeof workout.workoutDate === 'string' ? workout.workoutDate : new Date(workout.workoutDate).toLocaleDateString()}
+                </td>              
                 <td>{workout.situps}</td>
                 <td>{workout.pushups}</td>
                 <td>{workout.deadlifts}</td>
                 <td>{workout.ballrolls}</td>
                 <td>{workout.kneeups}</td>
                 <td>{workout.comments}</td>
-                </tr>    
-)    )}            
-              </tbody>
-
+                <td>                
+                  <Link href={`/dashboard/workouts/${workout.id}/edit`}>
+                    <Button variant="ghost" size="icon">
+                      <SquarePen id="edit-icon" />
+                    </Button>
+                  </Link>
+                  <DeleteWorkoutButton id={String(workout.id ?? '')} /></td>
+              </tr>
+            ))}
+          </tbody>
           </table> 
         </div>           
   </>              

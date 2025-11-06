@@ -1,49 +1,90 @@
 "use client"
 
+import { useActionState, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { addHillRunSchema } from '@/lib/validators'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
 import { Label } from '@/components/ui/label'
-// import { toast } from "sonner"
-// import Link from 'next/link';
-// import { Checkbox } from '../ui/checkbox';
-import { useActionState } from 'react';
+
 import { createHillRun } from '@/lib/actions/hillActions'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import DatePicker from './date-picker';
 
-
-export function HillForm() {
-
-
-    const [state, action, isPending] = useActionState(createHillRun, {
-        success: false,
-        message: ""
-       
-    })
-
-    console.log(state);
-
-const AddHillsButton = () => {
-     
-      return (
-        <Button disabled={isPending} className='w-full' variant='default'>
-           Add Hill Run
-        </Button>
-      );
-    };
+import { format, parseISO } from 'date-fns';
 
 
 
+
+
+
+
+export default function HillForm() {
+
+   const [selected, setSelected] = useState<Date>();
+const [open, setOpen] = useState(false);
+
+// const inputDate = "06-29-2024";
+
+
+const [state, action, isPending] = useActionState(
+    createHillRun, 
+    {
+        error: {},
+    }
+);
+
+// console.log(state);
+
+const form = useForm<z.infer<typeof addHillRunSchema>>({
+    resolver: zodResolver(addHillRunSchema),
+    defaultValues: {
+        date: new Date().toISOString(),
+        numHills: 5,
+        et: 0,
+        best: 0,
+        shoes: '',
+        comments: '',
+    },
+});
+
+const AddHillsButton = () => {   
     return (
-     
-        <form action={action}>  
-        <div className='space-y-6'>
-          <Label htmlFor='date'>Date</Label>
-          <Input
-            id='date'
-            name='date'
-            type='text'
-            className='mb-5'
+        <Button disabled={isPending} className='w-full' variant='default'>
+            Add Hill Run
+        </Button>
+    );
+};
+
+return (
+ <Form {...form}>
+    <form action={action} className='space-y-6'>  
+        <FormField
+          control={form.control}
+          name='date'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Date</FormLabel>
+              
+<FormControl>
+        <div>
+          <DatePicker
+            value={field.value}
+            onChange={field.onChange}
           />
+          {/* Hidden input to ensure date is included in FormData */}
+          <input type="hidden" name="date" value={field.value ?? ""} />
         </div>
+      </FormControl>
+      <FormMessage />
+            </FormItem>
+           
+          )}
+          />
+         
+
         <div className='space-y-6'>
           <Label htmlFor='numHills'>Number</Label>
           <Input
@@ -112,6 +153,7 @@ const AddHillsButton = () => {
       
 
         </form>
+        </Form>
      
     )
 }

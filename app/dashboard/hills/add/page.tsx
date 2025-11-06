@@ -5,7 +5,7 @@ import {
     CardHeader,
     CardTitle,
   } from '@/components/ui/card';
-  import { HillForm } from '@/app/dashboard/components/add-hill-form';
+  import HillForm from '@/app/dashboard/components/add-hill-form';
 
 
 const AddHillsRunPage = () => {

@@ -1,45 +1,51 @@
 "use client"
 
-import { z } from 'zod';
+
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
+
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "sonner"
-import Link from 'next/link';
-import { useActionState, useEffect, useState } from "react";
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { useFormStatus } from 'react-dom';
+
+// import { toast } from "sonner"
+import { useActionState } from "react";
+import {useForm } from 'react-hook-form'
 import { addWorkoutSchema } from '@/lib/validators'
-import { Workout } from '@/types'
 import { createWorkout } from '@/lib/actions/workoutActions'
+import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns'
-import { Label } from '@/components/ui/label';
-import { Popover, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon } from 'lucide-react';
-import { PopoverContent } from '@radix-ui/react-popover';
-import { Calendar } from '@/components/ui/calendar';
-import { redirect } from 'next/navigation';
-// import { useRouter } from 'next/router';
+// import { format } from 'date-fns'
+import { Label } from '@radix-ui/react-label';
+// import { redirect } from 'next/navigation';
 
 
 
-const WorkoutForm = ({
+export default function WorkoutForm() {
 
-}) => {
+  // Use useActionState to manage the state of the action
+  // This will handle the action state, including success, errors, and loading state  
+
+  const [state, action, isPending] = useActionState(
+    createWorkout, {   
+    success: false,
+    message: "",
+  }
+  );
+    
+ 
+
+  // console.log("State: " + JSON.stringify(state, null, 2));
 
   const form = useForm<z.infer<typeof addWorkoutSchema>>({
     resolver: zodResolver(addWorkoutSchema),
     defaultValues: {
-      workoutDate: '',
+      workoutDate: new Date(),
       situps: 25,
       pushups: 25,
       deadlifts: 25,
@@ -49,183 +55,116 @@ const WorkoutForm = ({
     },
   })
 
-const onSubmit: SubmitHandler<z.infer<typeof addWorkoutSchema>> = async (
-  values
-) => {
-  const res = await createWorkout(values)
-
-    if (!res.success) {
-      toast('Oops! Oops! Oops!') 
-    } else {
-      toast('Workout successfully recorded')      
-    }
-redirect('/dashboard/workouts')
+  // console.log(state);
 
 
-}
 
-
+  const AddWorkoutButton = () => {
+      return (
+        <Button 
+         className='w-full' variant='default'
+         type="submit"
+         >
+          {isPending ? "Saving..." : "Save Workout Data"}
+        </Button>
+      );
+    };
    return (
-    <Form {...form}> 
-      <form  
-      method='POST'
-      className='flex flex-col mx-auto max-w-md gap-3' 
-      onSubmit={form.handleSubmit(onSubmit)}
-      >
+   
+      <form  action={action} className='space-y-6'>
 
-
-<FormField 
-        control={form.control} 
-        name='workoutDate'
-        render={({ field }) => (
-          <FormItem className='flex flex-col pb-2'>
-            <FormLabel className='mb-1'>Enter Date of Workout</FormLabel>
-
-            <FormControl>
-              <Input {...field} className='mb-4'/>
-            </FormControl>
+        <div className='space-y-6'>
+          <Label htmlFor='date'>Date</Label>
+          <Input
+            id='workoutDate'
+            name='workoutDate'
+            type='Date'
             
-        {/* <Popover>
-                <PopoverTrigger asChild>
-                            <FormControl>
-                            <Button variant="outline" className='normal-case flex justify-between pr-10'>
-                        {!!field.value ? format(field.value, "P") :  <span>Pick a Date</span>}
-                               
-                                <CalendarIcon />
-                                </Button>
-                            </FormControl>
-                </PopoverTrigger>
-                <PopoverContent align='start' className='w-auto p-0'>
-                    <Calendar 
-                    mode="single"
-                    defaultMonth={field.value}
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    fixedWeeks
-                    weekStartsOn={1}
-                    initialFocus
-                    captionLayout="dropdown-buttons"
-                    fromDate={new Date()}
-                    fromYear={2000}
-                    toYear={2025}
-                    className='bg-popover'
-                    />
-                </PopoverContent>
-
-        </Popover>        */}
-
-
-            <FormMessage />
-          </FormItem>
-        )}
-/>        
+            className='mb-5'
+          />
+        </div>
 <div className="flex flex-col md:flex-row gap-5">
-<FormField 
-        control={form.control} 
-        name="situps" 
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Situps</FormLabel>
-            <FormControl>
-              <Input placeholder='' {...field} className='mb-4 max-w-28'/>
-            </FormControl>
-            {/* <FormDescription>Enter Total Time</FormDescription> */}
-            <FormMessage />
-          </FormItem>
-        )}
-        />
-        
-     
-      <FormField 
-        control={form.control} 
-        name="pushups" 
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Pushups</FormLabel>
-            <FormControl>
-              <Input placeholder='' {...field} className='mb-4 max-w-28'/>
-            </FormControl>
-            {/* <FormDescription>Enter number of loops</FormDescription> */}
-            <FormMessage />
-          </FormItem>
-        )}
-        />
-
-<FormField 
-        control={form.control} 
-        name="deadlifts" 
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Deadlifts</FormLabel>
-            <FormControl>
-              <Input placeholder='' {...field} className='mb-4 max-w-28'/>
-            </FormControl>
-            {/* <FormDescription>Enter best Loop time</FormDescription> */}
-            <FormMessage />
-          </FormItem>
-        )}
-        />
-       
-        <FormField 
-        control={form.control} 
-        name="ballrolls" 
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Ballrolls</FormLabel>
-            <FormControl>
-              <Input placeholder='' {...field} className='mb-4 max-w-28'/>
-            </FormControl>
-            {/* <FormDescription>Enter best Loop time</FormDescription> */}
-            <FormMessage />
-          </FormItem>
-        )}
-        />
-        
-
-
-<FormField 
-        control={form.control} 
-        name="kneeups" 
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Kneeups</FormLabel>
-            <FormControl>
-              <Input placeholder=''             
-               {...field} className='mb-4 max-w-28'/>
-            </FormControl>
-            {/* <FormDescription>Enter best Loop time</FormDescription> */}
-            <FormMessage />
-          </FormItem>
-        )}
-        />
+<div>
+<Label htmlFor='situps'>Situps</Label>
+<Input
+            id='situps'
+            name='situps'
+            type='number'
+            className='mb-5'
+            defaultValue={25}
+          />
 </div>
-      
-        <FormField 
-        control={form.control} 
-        name="comments" 
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Comments</FormLabel>
-            <FormControl>
-              <Input placeholder='' {...field} className='mb-4'/>
-            </FormControl>
-            {/* <FormDescription>Enter best Loop time</FormDescription> */}
-            <FormMessage />
-          </FormItem>
-        )}
-        />
+<div>
+<Label htmlFor='pushups'>Pushups</Label>
+<Input
+            id='pushups'
+            name='pushups'
+            type='number'
+            className='mb-5'
+            defaultValue={25}
+          />
+</div>
 
-      <Button
-      type='submit'
-      className='w-full mt-5 bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-200'
-      >
-        Submit
-        </Button> 
-    
-     
+
+        <div>
+          <Label htmlFor='deadlifts'>Deadlifts</Label>
+          <Input
+            id='deadlifts'
+            name='deadlifts'
+            type='number'
+            className='mb-5'
+              defaultValue={25}
+          />
+</div>
+
+        <div>
+          <Label htmlFor='ballrolls'>Ballrolls</Label>
+          <Input
+            id='ballrolls'
+            name='ballrolls'
+            type='number'
+            className='mb-5'
+              defaultValue={25}
+          />
+</div>
+
+        <div>
+          <Label htmlFor='kneeups'>Kneeups</Label>
+          <Input
+            id='kneeups'
+            name='kneeups'
+            type='number'
+            className='mb-5'
+              defaultValue={10}
+          />
+</div>
+
+        <div>
+          <Label htmlFor='comments'>Comments</Label>
+          <Input
+            id='comments'
+            name='comments'
+            type='text'
+            className='mb-5'
+          />
+</div>
+
+       
+        
+
+
+
+{/* </div> */}
+      
+        
+
+
+   </div> 
+        <AddWorkoutButton />
+
       </form>
 
-     </Form>
+    
         
    )
 }
@@ -233,5 +172,5 @@ redirect('/dashboard/workouts')
 
 
 
-  export default WorkoutForm
+  
 

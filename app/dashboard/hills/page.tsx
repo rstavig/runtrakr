@@ -1,6 +1,8 @@
 
 import { getMyHills } from '@/lib/actions/hillActions';
 import Link from "next/link";
+import { DeleteHillRunButton } from '@/app/dashboard/components/delete-hillrun';
+import { formatInTimeZone } from "date-fns-tz"
 
 
 
@@ -46,16 +48,37 @@ export default async function HillsPage() {
             </div>
             <div className="mt-15">
                 <table className="custom-table">
+              <thead className="border-y-2 border-gray-400 gap-5">
+                        <tr className='gap-5'>
+                            <th>Date</th>
+                            <th>ET</th>
+                            <th>Loops</th>
+                            <th>Best</th>
+                            <th>Shoes</th>
+                            <th>Comments</th>
+                            <th>Actions</th>                       
+                        </tr>
+                    
+                    </thead>      
             <tbody className="text-gray-700 font-medium text-lg text-center">
                 {typedMyData && typedMyData.map((item: HillItem) => (
                     <tr key={item.id}>
-                        <td>{item.date}</td>
-                        <td>{item.numHills}</td>
+                       <td>
+                            {item.date
+                                ? formatInTimeZone(item.date, "UTC", "MM/dd/yyyy")
+                            : ""}
+                        </td>
                         <td>{item.et}</td>
+                        <td>{item.numHills}</td>
                         <td>{item.best}</td>
                         <td>{item.shoes}</td>
                         <td>{item.comments}</td>
-                        <td>{item.et}</td>
+                        <td>
+                            <DeleteHillRunButton
+                                id={item.id}
+                                                    
+                                className="w-10 h-10 sm-red-500 text-white hover:sm-red-600 transition-colors duration-200"
+                            /></td>
                     </tr>
                 ))}
             </tbody>

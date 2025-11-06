@@ -26,31 +26,35 @@ try {
   
 }
 
-// Create a Dots Run
+// Create a Dots Run/for the dot-form.tsx
 export async function createDotsRun(prevState: unknown, formData:FormData) {
 
 await new Promise((resolve) => setTimeout(resolve, 1200))
 
   try {
-    const dots = addDotRunSchema.parse({
+    const dots = addDotRunSchema.safeParse(
+      {
              daterun: formData.get('daterun'),
              et: formData.get('et'),
              loops: formData.get('loops'),
              best:  formData.get('best'),
              shoes:  formData.get('shoes'),
              comments: formData.get('comments'),
-    })
-
-
+    }
+  )
+if (!dots.success) {return {
+  error: dots.error.flatten().fieldErrors
+}}
+const {daterun, loops, best, et, shoes, comments} = dots.data
 
 await prisma.dots.create({
   data: {
-    daterun: dots.daterun,
-    et: dots.et,
-    loops: dots.loops,
-    best:  dots.best,
-    shoes: dots.shoes,
-    comments: dots.comments,
+    daterun: new Date(daterun).toISOString(),
+    et: et,
+    loops: loops,
+    best:  best,
+    shoes: shoes,
+    comments: comments,
   }
 })
 
@@ -84,26 +88,38 @@ try {
 // This is for dotrun2
 
 
-// export async function createDotRunAction(prevState: any, formData: FormData ) {
-//   const dotFormData = Object.fromEntries(formData)
-//   const validatedDotFormData = addDotRunSchema.safeParse(dotFormData)
+export async function createDotRunAction(data: z.infer<typeof addDotRunSchema>) {
 
-//   await new Promise((resolve) => setTimeout(resolve, 500));
+  try {
+  const dotRun = addDotRunSchema.parse(data)
 
-// console.log(validatedDotFormData);
+   await prisma.dots.create({data: dotRun})
+ 
+  revalidatePath('/dashboard/dots')
+  redirect('/dashboard/dots')
 
-//   if (!validatedDotFormData.success) {
-//     const formFieldErrors = validatedDotFormData.error.flatten().fieldErrors
-//     return {
-//       errors: {
-//         et: formFieldErrors?.et,
-//         loops: formFieldErrors?.loops,
-//         best: formFieldErrors?.best
-//       }
-//     }
-//   }
-// return {
-//   success: "Your data was recorded successfully"
-// }
+  return {
+      success: true,
+      message: 'Dot Run created successfully',
+    };
 
-// }
+  } catch (error) {
+    console.log("Error creating Dot Run " + error);
+    return {error: {message: ['Failed to create Dot Run']}}
+  }
+
+}
+
+// Delete Dot Run
+export async function deleteDotRun(id: string) {
+  try {
+    await prisma.dots.delete({
+      where: { id }
+    });
+    revalidatePath('/dashboard/dots')
+    return { success: true, message: "Dot Run deleted successfully" };
+  } catch (error) {
+    console.log("Error deleting Dot Run " + error);
+    return { success: false, message: formatError(error) };
+  }
+}

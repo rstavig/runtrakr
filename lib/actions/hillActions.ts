@@ -4,7 +4,7 @@ import { prisma } from '@/db/prisma';
 import { addHillRunSchema } from '@/lib/validators'
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { convertToPlainObject } from '../utils';
+import { convertToPlainObject, formatError } from '../utils';
 
 
 
@@ -44,30 +44,59 @@ export async function getHillCount() {
 // Create Hill Run
 export async function createHillRun(prevState: unknown, formData:FormData) {
     await new Promise((resolve) => setTimeout(resolve, 1200))
-    const validatedFields = addHillRunSchema.safeParse(
-        Object.fromEntries(formData.entries())
-    )
-    if(!validatedFields.success) {
-        return {
-            error: validatedFields.error.flatten().fieldErrors
-        }
-    }
-    const {date, et, numHills, best, shoes, comments} = validatedFields.data
+    
     try {
+    const hills = addHillRunSchema.parse(
+        {
+            date: formData.get('date'),
+            numHills: formData.get('numHills'),
+            et: formData.get('et'),
+            best: formData.get('best'),
+            shoes: formData.get('shoes'),
+            comments: formData.get('comments') || '',
+        } )
+        
+        const {date, et, numHills, best, shoes, comments} = hills
+
         await prisma.hills.create({
             data: {
-                date,
+                date: new Date(date),
                 numHills,
-                et,            
+                et,
                 best,
                 shoes,
                 comments
             }
-        })
+        });
     } catch (error) {
         console.log("Error creating Hill Run " + error);
-        return {error: {message: ['Failed to create Hill Run']}}
+        return {
+          success: false,
+          message: formatError(error),
+        }
     }
+    // Revalidate and redirect after successful creation
     revalidatePath('/dashboard/hills')
 redirect('/dashboard/hills')
 }
+
+// Delete Hill Run
+export async function deleteHillRun(id: string) {
+  try {
+
+    await prisma.hills.delete({ where: { id: Number(id) } });
+
+    revalidatePath('/dashboard/hills');
+
+    return {
+      success: true,
+      message: 'Hill Run deleted successfully',
+    };
+  } catch (error) {
+    return { success: false, message: error instanceof Error ? error.message : 'An error occurred'};
+  }
+}
+
+
+  
+  

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { neonConfig } from '@neondatabase/serverless';
-// import { PrismaNeon } from '@prisma/adapter-neon';
+
 
 import dotenv from 'dotenv'
 import ws from 'ws';

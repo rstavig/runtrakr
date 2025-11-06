@@ -1,13 +1,15 @@
-import { prisma } from '@/db/prisma';
+
 import Link from "next/link";
 import { getMyDots } from '@/lib/actions/dotActions'
 import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import { DeleteDotRunButton } from '@/app/dashboard/components/delete-dot-run';
 
 
-// async function getMyDots() {
-//     const data = await prisma.dots.findMany()
-//     return data
-//   }
+interface DotItem {
+    id: Key | null | undefined;
+    daterun: Date | string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<unknown>> | Iterable<ReactNode> | null | undefined> | null | undefined;
+    et: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<unknown>> | Iterable<ReactNode> | null | undefined> | null | undefined;
+}
 
   
 
@@ -16,7 +18,16 @@ export default async function DotsPage() {
     
 const myData = await getMyDots()
 
-
+const typedMyData: DotItem[] | undefined = Array.isArray(myData) ? myData.map(item => ({
+            ...item,
+            id: String(item.id),
+            et: String(item.et),
+            daterun: item.daterun instanceof Date ? item.daterun.toISOString().split('T')[0] : String(item.daterun ?? ''),
+            best: item.best !== null ? String(item.best) : '',
+            shoes: item.shoes ?? '',
+            comments: item.comments ?? ''
+        }))
+        : undefined;
 
 
   return (
@@ -54,6 +65,7 @@ const myData = await getMyDots()
                             <th>Best</th>
                             <th>Shoes</th>
                             <th>Comments</th>                        
+                            <th>Actions</th>                        
                         </tr>
                     
                     </thead>
@@ -61,23 +73,22 @@ const myData = await getMyDots()
                 <tbody className="text-gray-700 font-medium text-lg text-center">
                     
 
-          
-            {myData && myData.map((item: { id: Key | null | undefined; daterun: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<unknown>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; et: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; loops: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; best: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; shoes: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; Comments: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
-   
-  
-
-
-            <tr key={item.id}>       
-            
-            <td>{item.daterun}</td>
-            <td>{item.et}</td>
-            <td>{item.loops}</td>
-            <td>{item.best}</td>
-            <td>{item.shoes}</td>
-            <td>{item.comments}</td>
-            </tr>
-            ))}
-       
+{typedMyData && typedMyData.map((item, idx) => (
+    <tr key={item.id ?? idx}>       
+        <td>{item.daterun instanceof Date ? item.daterun.toISOString().split('T')[0] : String(item.daterun ?? '')}</td>
+        <td>{item.et}</td>
+        <td>{(Array.isArray(myData) && myData[idx]?.loops) ?? ''}</td>
+        <td>{(Array.isArray(myData) && myData[idx]?.best) ?? ''}</td>
+        <td>{(Array.isArray(myData) && myData[idx]?.shoes) ?? ''}</td>
+        <td>{(Array.isArray(myData) && myData[idx]?.comments) ?? ''}</td>
+        <td><DeleteDotRunButton id={String(item.id ?? '')} /></td>
+    </tr>
+))}
+          <tr>
+              <td colSpan={6} className="text-right font-semibold">
+                  Total Runs: {typedMyData?.length ?? 0}
+              </td>
+          </tr>
                     </tbody>
                 </table> 
                 </div>

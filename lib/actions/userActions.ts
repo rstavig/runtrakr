@@ -8,7 +8,7 @@ import {
   import { isRedirectError } from 'next/dist/client/components/redirect-error';
   import { hashSync } from 'bcrypt-ts-edge';
 import { prisma } from '@/db/prisma';
-// import { formatError } from '../utils';
+import { formatError } from '../utils';
 import { redirect } from 'next/navigation';
 // import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
@@ -87,25 +87,45 @@ try {
 redirect('/dashboard/')
 }
 
-        
+    // Get All Users
+export const getUsers = async () => {
+  const users = await prisma.user.findMany();
+  return users;
+};
+
+// Get user by ID
+export async function getUserById(userId: string) {
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+  });
+
+  if (!user) throw new Error('User not found');
+  return user;
+}
 
 
 
-      
-        
-        // user.password = await hashSync(user.password, 5)
+// Delete user by ID
+export async function deleteUser(id: string) {
+  try {
+    await prisma.user.delete({ where: { id } });
+  
+    revalidatePath('/admin/users');
+    
 
-        //  await prisma.user.create({
-        //     data: {
-        //         name: user.name,
-        //         email: user.email,
-        //         password: user.password            
-        //     }                     
-        // })
-        
-        // await signIn('credentials', {
-        //     email: user.email,
-        //     password: user.plainPassword
-        // })
+    
+    return {
+      success: true,
+      message: 'User deleted successfully'
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
+
+  
+
+
+
        
     
