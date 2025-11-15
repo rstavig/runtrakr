@@ -5,7 +5,7 @@ import { addDotRunSchema } from '../validators'
 import {  formatError } from '../utils';
 import { z } from 'zod' 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+
 
 
 
@@ -60,8 +60,7 @@ await prisma.dots.create({
 
 return { success: true, message: "Dot Run recorded successfully"}
 
-revalidatePath('/dashboard/dots')
-     redirect('/dashboard/dots')
+
 
 } catch (error) {
   return {success: false, message: formatError(error)}
@@ -96,7 +95,7 @@ export async function createDotRunAction(data: z.infer<typeof addDotRunSchema>) 
    await prisma.dots.create({data: dotRun})
  
   revalidatePath('/dashboard/dots')
-  redirect('/dashboard/dots')
+ 
 
   return {
       success: true,

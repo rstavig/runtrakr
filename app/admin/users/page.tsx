@@ -13,8 +13,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatId } from '@/lib/utils';
-import DeleteDialog from '@/components/delete-dialog';
-import { Trash2 } from 'lucide-react';
 import { SquarePen } from 'lucide-react';
 import { TrashButton } from '@/app/dashboard/components/trash-button';
 // import { AdminSignupForm } from '@/app/admin/users/add/admin-signup-form';
@@ -24,15 +22,6 @@ export const metadata: Metadata = {
   title: 'Admin Users',
 };
 
-
-interface UserItem {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    createdAt: Date;
-}
 
 
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { addHillRunSchema } from '@/lib/validators'
 import { z } from 'zod'
@@ -13,7 +13,7 @@ import { createHillRun } from '@/lib/actions/hillActions'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import DatePicker from './date-picker';
 
-import { format, parseISO } from 'date-fns';
+
 
 
 
@@ -23,8 +23,8 @@ import { format, parseISO } from 'date-fns';
 
 export default function HillForm() {
 
-   const [selected, setSelected] = useState<Date>();
-const [open, setOpen] = useState(false);
+//    const [selected, setSelected] = useState<Date>();
+// const [open, setOpen] = useState(false);
 
 // const inputDate = "06-29-2024";
 
@@ -37,7 +37,7 @@ const [state, action, isPending] = useActionState(
     }
 );
 
-// console.log(state);
+console.log(state);
 
 const form = useForm<z.infer<typeof addHillRunSchema>>({
     resolver: zodResolver(addHillRunSchema),

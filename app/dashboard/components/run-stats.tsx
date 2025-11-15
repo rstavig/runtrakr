@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
     const [dotLoops, setDotLoops] = useState<number | null>(null);
     const [dotError, setDotError] = useState<string | null>(null);
 
+    console.log(dotError);
+
     useEffect(() => {
         getHillCount()
             .then((result) => {
@@ -36,12 +38,12 @@ import { Button } from "@/components/ui/button";
                 if (typeof result === "number") {
                     setDotLoops(result);
                 } else if (result && result.error && Array.isArray(result.error.message)) {
-                    setDotError(result.error.message.join(", "));
+                    setDotError(result.error.message.join(", "));   
                 } else {
                     setDotError("Unknown error");
                 }
             })
-            .catch(() => setDotError("Failed to fetch dot loops"));
+            .catch (() => setDotError("Failed to fetch dot loops"));
     }, []);
 
     return <div className="grid md:grid-cols-3 gap-5">
