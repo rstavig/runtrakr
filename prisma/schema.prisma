@@ -10,7 +10,7 @@ datasource db {
 
 model Workouts {
   id          String    @id @default(dbgenerated("gen_random_uuid()"))
-  workoutDate DateTime  @default(now())
+  workoutDate DateTime  @db.Date()
   situps      Int
   pushups     Int
   deadlifts   Int?

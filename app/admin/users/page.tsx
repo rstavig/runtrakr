@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatId } from '@/lib/utils';
-import { DeleteDialog } from '@/components/delete-dialog';
+import DeleteDialog from '@/components/delete-dialog';
 import { Trash2 } from 'lucide-react';
 import { SquarePen } from 'lucide-react';
 import { TrashButton } from '@/app/dashboard/components/trash-button';

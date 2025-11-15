@@ -29,11 +29,11 @@ async function main() {
   for (let i = 0; i < sampleData.users.length; i++) {
     users.push({
       ...sampleData.users[i],
-      password: await hashSync(sampleData.users[i].password),
+      password: hashSync(sampleData.users[i].password),
     });
     console.log(
       sampleData.users[i].password,
-      await hash(sampleData.users[i].password)
+      hashSync(sampleData.users[i].password)
     );
   }
 

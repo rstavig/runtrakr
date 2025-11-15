@@ -36,8 +36,8 @@ export const signUpFormSchema = z
 
 
   // Schema for Adding new Workout
-  export const addWorkoutSchema = z.object({
-      workoutDate: z.coerce.date(),
+  export const workoutItemSchema = z.object({
+      workoutDate: z.string().min(1, "Date is required"),
       situps: z.coerce.number().min(1, {message: 'Number of situps'}),
       pushups: z.coerce.number().min(1, {message: 'Number of pushups'}),
       deadlifts: z.coerce.number().optional(),
@@ -45,6 +45,11 @@ export const signUpFormSchema = z
       kneeups: z.coerce.number().optional(),
       comments: z.string().optional(),
   })
+
+  // Update a workout item
+  export const updateWorkoutItemSchema = workoutItemSchema.extend({
+    id: z.string().min(1, "ID is required"),
+  });
 
   // Schema for Adding new Hill Run
   export const addHillRunSchema = z.object({

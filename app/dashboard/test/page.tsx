@@ -3,7 +3,6 @@ import React from 'react'
 import { getMyTestItems } from '@/lib/actions/testActions';
 import { DeleteItemButton } from '@/app/dashboard/components/delete-item-button';
 import { SquarePen } from 'lucide-react';
-import { format } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz"
 import { Button } from "@/components/ui/button";
 
@@ -16,9 +15,6 @@ import { Button } from "@/components/ui/button";
 //     qty: number;
 //     comments: string;
 // }
-
-
-
 
 export default async function TestPage() {
 
@@ -78,12 +74,14 @@ console.log(testItems);
                             <td>{item.qty}</td>
                             <td>{item.comments}</td>
                             <td>
-                                <Link href={`/dashboard/test/${item.id}/edit`}>
-                    <Button variant="ghost" size="icon">
-                      <SquarePen id="edit-icon" />
-                    </Button>
-                  </Link>
+                                <div className="text-lg flex text-white items-center justify-center">
+                            <Link href={`/dashboard/test/${item.id}/edit`}>
+                                <Button variant="ghost" size="icon">
+                                    <SquarePen id="edit-icon" />
+                                </Button>
+                            </Link>
                                 <DeleteItemButton id={String(item.id ?? '')} />
+                                </div>
                             </td>
                         </tr>
                     );

@@ -25,7 +25,8 @@ export default async function UpdateTestItemPage({ params }: { params: { id: str
 
   // Map DB fields to form fields if needed
   const initialData = {
-   date: item.date ? new Date(item.date).toISOString().slice(0, 10) : "",
+    id: item.id,
+    date: item.date ? new Date(item.date).toISOString().slice(0, 10) : "",
     item: item.item ?? "",
     qty: item.qty ?? 0,
     comments: item.comments ?? "",

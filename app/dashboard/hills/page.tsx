@@ -25,6 +25,7 @@ export default async function HillsPage() {
         ? myData.map(item => ({
             ...item,
             id: String(item.id),
+            date: item.date instanceof Date ? item.date.toISOString() : String(item.date),
             et: String(item.et),
             best: item.best !== null ? String(item.best) : '',
             shoes: item.shoes ?? '',

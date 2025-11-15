@@ -30,9 +30,10 @@ const [open, setOpen] = useState(false);
 
 
 const [state, action, isPending] = useActionState(
-    createHillRun, 
+    createHillRun,
     {
-        error: {},
+        success: false,
+        message: '',
     }
 );
 

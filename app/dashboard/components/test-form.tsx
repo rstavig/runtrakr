@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { formSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,14 +16,16 @@ import DatePicker from "./date-picker";
 
 
 export type TestItemData = {
+  id?: string;
   date?: string;
   item?: string;
   qty?: number;
   comments?: string;
   errors?: string[];
 };
-
 export function TestForm({ initialData }: { initialData?: TestItemData }) {
+  const router = useRouter();
+
   type TestFormState = {
     success: boolean;
     errors: string | Record<string, unknown> | null;
@@ -45,20 +48,22 @@ export function TestForm({ initialData }: { initialData?: TestItemData }) {
     };
   };
 
+  // Use useActionState to manage the state of the action
+  // This will handle the action state, including success, errors, and loading state  
   const [state, action, isPending] = useActionState<TestFormState, FormData>(
     wrappedTestItemAction,
     {
       success: false,
       errors: null,
       message: '',
-    }, 
+    } 
   );
 
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      date: initialData?.date ?? new Date().toISOString(),
+      date: initialData?.date ?? new Date().toISOString().split('T')[0],
       item: initialData?.item ?? '',
       qty: initialData?.qty ?? 0,
       comments: initialData?.comments ?? '',
@@ -68,7 +73,7 @@ export function TestForm({ initialData }: { initialData?: TestItemData }) {
  useEffect(() => {
     if (initialData) {
       form.reset({
-        date: initialData.date ?? new Date().toISOString(),
+        date: initialData.date ?? new Date().toISOString().split('T')[0],
         item: initialData.item ?? '',
         qty: initialData.qty ?? 0,
         comments: initialData.comments ?? '',
@@ -76,10 +81,19 @@ export function TestForm({ initialData }: { initialData?: TestItemData }) {
     }
   }, [initialData, form]);
 
+   useEffect(() => {
+    if (state.success) {
+      router.push('/dashboard/test');
+    }
+  }, [state.success, router]);
+
   return (
     <>
     <Form {...form}>
     <form action={action} className="space-y-6 w-full max-w-sm">
+        {/* Hidden ID field for updates */}
+        {initialData?.id && <input type="hidden" name="id" value={initialData.id} />}
+
         {state.message && (
           <div className="text-green-600 mb-2">{state.message}</div>
         )}
@@ -166,12 +180,12 @@ export function TestForm({ initialData }: { initialData?: TestItemData }) {
             )}
         />
         
-        <Button 
+        <Button
         className='w-full' variant='default'
         type="submit"
         disabled={isPending}
         >
-            {isPending ? "Saving..." : "Save Test Item"}
+            {isPending ? "Saving..." : initialData?.id ? "Update Test Item" : "Save Test Item"}
         </Button>
         </form>
   

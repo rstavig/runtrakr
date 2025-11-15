@@ -36,7 +36,7 @@ console.log(state);
     const form = useForm<z.infer<typeof addDotRunSchema>>({
         resolver: zodResolver(addDotRunSchema),
         defaultValues: {
-            daterun: new Date().toISOString(),
+            daterun: new Date(),
             et: '',
             loops: 0,
             best: '',

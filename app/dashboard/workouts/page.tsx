@@ -71,13 +71,17 @@ return (
                 <td>{workout.ballrolls}</td>
                 <td>{workout.kneeups}</td>
                 <td>{workout.comments}</td>
-                <td>                
+                <td>  
+                  <div className="text-lg flex text-white items-center justify-center">
                   <Link href={`/dashboard/workouts/${workout.id}/edit`}>
                     <Button variant="ghost" size="icon">
                       <SquarePen id="edit-icon" />
                     </Button>
                   </Link>
-                  <DeleteWorkoutButton id={String(workout.id ?? '')} /></td>
+                  <DeleteWorkoutButton id={String(workout.id ?? '')} />
+                  </div>   
+                  </td>
+                  
               </tr>
             ))}
           </tbody>

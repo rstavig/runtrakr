@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Workouts" ALTER COLUMN "workoutDate" DROP DEFAULT,
+ALTER COLUMN "workoutDate" SET DATA TYPE DATE;

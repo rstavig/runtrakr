@@ -3,7 +3,6 @@
 import { prisma } from '@/db/prisma';
 import { revalidatePath } from "next/cache";
 import { formSchema } from '../validators';
-import { redirect } from 'next/navigation';
 import {  formatError } from '../utils';
 import { convertToPlainObject } from '../utils';
 
@@ -23,11 +22,11 @@ try {
 } 
 }
 
-// Create New Test Item
+// Create or Update Test Item
 export async function testItemAction(
     prevState: unknown,
     formData: FormData) {
-        
+
 
     try {
 const testItem = formSchema.parse(
@@ -41,31 +40,46 @@ const testItem = formSchema.parse(
 
 
 const {  date, item, qty, comments } = testItem
+const id = formData.get('id') as string | null;
 
-       await prisma.test.create({
-           data: {
-             date: new Date(date), // ensure it's a Date object
-             item: item,
-             qty: qty,
-             comments: comments ?? '',
-           }
-       });
-  
+// If id exists, update; otherwise, create
+if (id) {
+    await prisma.test.update({
+        where: { id },
+        data: {
+            date: new Date(date),
+            item: item,
+            qty: qty,
+            comments: comments ?? '',
+        }
+    });
+} else {
+    await prisma.test.create({
+        data: {
+            date: new Date(date),
+            item: item,
+            qty: qty,
+            comments: comments ?? '',
+        }
+    });
+}
 
+       revalidatePath('/dashboard/test');
+
+        return {
+            success: true,
+            message: id ? "Test item updated successfully" :
+            "Test item created successfully"
+        }
    } catch (error) {
-    console.error("Error creating test item:", error);
+    console.error("Error saving test item:", error);
     return {
       success: false,
       message: formatError(error),
     };
-  }   
-  // Revalidate and redirect after successful creation
-   // No code after the redirect will run
-  
-revalidatePath('/dashboard/test');
-    redirect('/dashboard/test');
+ }
 
-}
+    }
 
     
 

@@ -1,11 +1,11 @@
 'use server';
 
 import { prisma } from '@/db/prisma';
-import {  formatError } from '../utils';
-import { z } from 'zod' 
+import {  convertToPlainObject, formatError } from '../utils'; 
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { addWorkoutSchema } from '@/lib/validators'
+import { workoutItemSchema } from '@/lib/validators'
+
+
 
 
 // Get All Workouts
@@ -23,14 +23,14 @@ export async function getMyWorkouts() {
     }     
     }
 
-    // Create a Workout
-    export async function createWorkout(
+    // Create or Update Workout
+    export async function workoutItemAction(
       prevState: unknown,
       formData: FormData) {
     await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
   
 try {
-    const workout = addWorkoutSchema.safeParse(
+    const workout = workoutItemSchema.parse(
       {
         workoutDate: formData.get('workoutDate'),
         situps: formData.get('situps'),
@@ -42,99 +42,53 @@ try {
       }
   )
 
+    const { workoutDate, situps, pushups, deadlifts, ballrolls, kneeups, comments } = workout  
 
-if (!workout.success) {
-  return {
-    error: workout.error.flatten().fieldErrors
-  }
-}
-    const { workoutDate, situps, pushups, deadlifts, ballrolls, kneeups, comments } = workout.data  
-
-
-    // Create a new workout record
-    await prisma.workouts.create({
+// Check if we are updating an existing workout
+const id = formData.get('id') as string | null;
+if (id) {
+    // Update existing workout record
+    await prisma.workouts.update({
+      where: { id },
       data: {
-       workoutDate: new Date(workoutDate).toISOString(),
+       workoutDate: new Date(workoutDate),
        situps: situps,
        pushups: pushups,
        deadlifts: deadlifts,
        ballrolls: ballrolls,
        kneeups: kneeups,
-       comments: comments || '',
+       comments: comments ?? '',
       }
     })
+} else {
+    // Create a new workout record
+    await prisma.workouts.create({
+      data: {
+       workoutDate: new Date(workoutDate),
+       situps: situps,
+       pushups: pushups,
+       deadlifts: deadlifts,
+       ballrolls: ballrolls,
+       kneeups: kneeups,
+       comments: comments ?? '',
+      }
+    })
+}
+    revalidatePath('/dashboard/workouts');
 
     return {
         success: true,
-        message: 'Workout added successfully'
+        message: id ?'Workout updated successfully' :
+        'Workout created successfully'
     }
-
- revalidatePath('dashboard/workouts')
-    redirect('dashboard/workouts')
-
     } catch (error) {
+    console.error('Error creating workout:', error);
  
   // Handle validation errors or other errors');
     return {success: false, message: formatError(error)}
-} 
-
-  }
-
-// Update a Workout
-export async function updateWorkout(id: string, formData: FormData) {
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate a delay
-
-    try {
-        const workout = addWorkoutSchema.safeParse(
-            {
-                workoutDate: formData.get('workoutDate'),
-                situps: formData.get('situps'),
-                pushups: formData.get('pushups'),
-                deadlifts: formData.get('deadlifts'),
-                ballrolls: formData.get('ballrolls'),
-                kneeups: formData.get('kneeups'),
-                comments: formData.get('comments') || '',
-            }
-        )
-
-        if (!workout.success) {
-            return {
-                error: workout.error.flatten().fieldErrors
-            }
-        }
-
-        const { workoutDate, situps, pushups, deadlifts, ballrolls, kneeups, comments } = workout.data
-
-        // Update the existing workout record
-        await prisma.workouts.update({
-            where: { id },
-            data: {
-                workoutDate: new Date(workoutDate).toISOString(),
-                situps,
-                pushups,
-                deadlifts,
-                ballrolls,
-                kneeups,
-                comments: comments || '',
-            }
-        })
-
-        revalidatePath('/dashboard/workouts')
-        redirect('/dashboard/workouts')
-
-        return {
-            success: true,
-            message: 'Workout updated successfully'
-        }
-
-    } catch (error) {
-        return {success: false, message: formatError(error)}
-    }
-  
-    
-   
+} ;
 }
-
+ 
 // Delete a Workout
 export async function deleteWorkout(id: string) {
     try {
@@ -143,13 +97,31 @@ export async function deleteWorkout(id: string) {
         })
 
         revalidatePath('dashboard/workouts')
+
         return {
             success: true,
             message: 'Workout deleted successfully'
         }
     } catch (error) {
+
         return {success: false, message: formatError(error)}
     }
 }
-    
 
+// Get Workout Item by Id
+export async function getWorkoutById(id: string) {
+    try {
+        const workout = await prisma.workouts.findUnique({
+            where: { id }
+        });
+
+        if (!workout) {
+            return null;
+        }
+
+        return convertToPlainObject(workout);
+    } catch (error) {
+        console.error("Error fetching workout by ID:", error);
+        return { error: formatError(error) };
+    }
+}
