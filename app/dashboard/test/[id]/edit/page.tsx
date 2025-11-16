@@ -11,7 +11,7 @@ import {
   } from '@/components/ui/card';
   import  { TestForm } from '@/app/dashboard/components/test-form'
   
-export default async function UpdateTestItemPage({ params }: { params: { id: string } }) {
+export default async function UpdateTestItemPage({ params }: { params: Promise<{ id: string }> }) {
 
   const { id } = await params;
 

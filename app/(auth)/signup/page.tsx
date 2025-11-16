@@ -16,6 +16,7 @@ import {
 
 import SignUpForm from './signup-form';
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 
 export const metadata: Metadata = {
@@ -51,7 +52,9 @@ export default function SignupPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className='space-y-4'>
-          <SignUpForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <SignUpForm />
+          </Suspense>
         </CardContent>
       </Card>
     </div>

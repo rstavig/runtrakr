@@ -1,4 +1,4 @@
-import { addDotRunSchema, addWorkoutSchema } from "@/lib/validators";
+import { addDotRunSchema, workoutItemSchema } from "@/lib/validators";
 import { z } from "zod";
 
 export type Dots = z.infer<typeof addDotRunSchema> & {
@@ -10,7 +10,7 @@ export type Dots = z.infer<typeof addDotRunSchema> & {
     comments:  string;
 }
 
-export type Workout = z.infer<typeof addWorkoutSchema> & {
+export type Workout = z.infer<typeof workoutItemSchema> & {
     workoutDate: Date,
     situps: number,
     pushups: number,

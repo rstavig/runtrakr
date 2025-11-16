@@ -11,7 +11,7 @@ import {
   import  WorkoutForm  from '@/app/dashboard/components/workout-form'
 
 
-export default async function UpdateWorkoutPage({ params }: { params: { id: string } }) {
+export default async function UpdateWorkoutPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
     const workout = await getWorkoutById(id);
