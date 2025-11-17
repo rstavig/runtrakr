@@ -22,7 +22,6 @@ import { workoutItemAction } from '@/lib/actions/workoutActions'
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-label';
-// import { redirect } from 'next/navigation';
 import DatePicker from "./date-picker";
 
 
