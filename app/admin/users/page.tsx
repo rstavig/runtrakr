@@ -15,7 +15,7 @@ import {
 import { formatId } from '@/lib/utils';
 import { SquarePen } from 'lucide-react';
 import { TrashButton } from '@/app/dashboard/components/trash-button';
-// import { AdminSignupForm } from '@/app/admin/users/add/admin-signup-form';
+
 
 
 export const metadata: Metadata = {
@@ -44,8 +44,7 @@ const users = await getUsers();
                 </button>   
                 </div>
                 <hr className='mt-5'/>
-                        {/* <AdminSignupForm /> */}
-      <Table>
+                     
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>

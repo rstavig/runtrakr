@@ -29,7 +29,7 @@ import { Button } from "@/components/ui/button";
                     setHillError("Unknown error");
                 }
             })
-            .catch(() => setHillError("Failed to fetch hill count"));
+            .catch(() => setHillError("Failed to get the hill count"));
     }, []);
 
     useEffect(() => {

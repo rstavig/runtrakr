@@ -16,17 +16,7 @@ import DatePicker from './date-picker';
 
 
 
-
-
-
-
-
 export default function HillForm() {
-
-//    const [selected, setSelected] = useState<Date>();
-// const [open, setOpen] = useState(false);
-
-// const inputDate = "06-29-2024";
 
 
 const [state, action, isPending] = useActionState(

@@ -3,11 +3,10 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-// import { useFormState } from 'react';
 import { useActionState } from 'react';
 import { signUp } from '@/lib/actions/userActions';
 import { useSearchParams } from 'next/navigation';
-// import { redirect } from 'next/navigation';
+
 
 
 
@@ -65,7 +64,6 @@ const SignUpButton = () => {
             name='password'
             required
             type='password'
-            // defaultValue={signInDefaultValues.password}
             autoComplete='current-password'
           />
         </div>
@@ -76,7 +74,6 @@ const SignUpButton = () => {
             name='confirmPassword'
             required
             type='password'
-            // defaultValue={signInDefaultValues.password}
             autoComplete='current-password'
           />
         </div>
@@ -87,7 +84,6 @@ const SignUpButton = () => {
             name='role'
             required
             type='text'
-            // defaultValue={signInDefaultValues.password}
             autoComplete='role'
           />
         </div>

@@ -102,7 +102,7 @@ export default function WorkoutForm({ initialData }: { initialData?: WorkoutItem
     }
    }, [initialData, form]);
 
-  // console.log(state);
+  
 
   useEffect(() => {
     if (state.success) {
