@@ -30,21 +30,24 @@ const AdminUserPage = async () => {
 const users = await getUsers();
 
   return (
-    <>
+    <div>
     
-<div className="flex justify-between">
-    <h1 className='h2-bold'>Users</h1>
-    <button>
-                    <Link
-                        href='/admin/users/add'
-                        className="custom-primary-btn"
-                    >
-                        Add New User
-                    </Link>
-                </button>   
-                </div>
-                <hr className='mt-5'/>
-                     
+          <div className="flex justify-between">
+            <h1 className='h2-bold'>Users</h1>
+            <div>
+                  <button>
+                      <Link
+                          href='/admin/users/add'
+                          className="custom-primary-btn"
+                      >
+                          Add New User
+                      </Link>
+                  </button>   
+              </div>
+                {/* <hr className='mt-5'/> */}
+            </div>
+            <div>
+        <Table className='mt-5'>             
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
@@ -69,16 +72,6 @@ const users = await getUsers();
                   </Button>
                 </Link>
                 
-                {/* <DeleteDialog
-                  title="Delete User"
-                  description={`Are you sure you want to delete user ${user.name}? This action cannot be undone.`}
-                  action={
-                    <Trash2
-                      id={user.id}
-                      className="ml-2"
-                    />
-                  }
-                /> */}
                 <TrashButton id={user.id} />
                 
               </TableCell>
@@ -86,7 +79,8 @@ const users = await getUsers();
           ))}
         </TableBody>
       </Table>
-    </>
+      </div>
+    </div>
   )
 }
 
