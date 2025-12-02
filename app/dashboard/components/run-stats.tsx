@@ -131,5 +131,21 @@ import { Button } from "@/components/ui/button";
               </div>
           </Link>
         </Card>
+        <Card className="border-amber-500">
+        <CardHeader>
+                <CardTitle>Treadmill</CardTitle>
+            </CardHeader>
+            <CardContent>
+        <p>Treadmill workouts and related data.</p>
+        <p>Wintertime training to maintain fitness when outdoor running is limited.</p>
+            </CardContent>
+          <Link href='/dashboard/treadmill'>
+          <div className="text-center">
+              <Button className="p-3 bg-amber-500 text-white">
+                  Treadmill Page
+              </Button>
+              </div>
+          </Link>
+        </Card>
     </div>
  }

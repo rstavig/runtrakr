@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
 import MenuItem from "./menu-item";
 import MenuTitle from "./menu-title";
 import { cn } from "@/lib/utils";
+import  InfoDialog  from "./InfoDialog"
 
 
 // import { LightDarkToggle } from "@/components/ui/light-dark-toggle";
@@ -36,13 +37,16 @@ export default function MainMenu({ className }: { className?: string }) {
         <MenuItem href="/dashboard/dots">Dots</MenuItem>
         <MenuItem href="/dashboard/races">Races</MenuItem>
         <MenuItem href="/dashboard/workouts">Workouts</MenuItem>
+        <MenuItem href="/dashboard/treadmill">Treadmill</MenuItem>
         <MenuItem href="/dashboard/test">Test Page</MenuItem>
        
           <MenuItem href="/admin">Admin Area</MenuItem>
         
         </div>
+
+         <InfoDialog /> 
       </div>
-        
+       
         <footer className="flex gap-2 p-5 mb-5 items-center">
             <Avatar>
                 <AvatarFallback className="bg-amber-500 p-2 rounded-full w-40 h-40">BS</AvatarFallback>
