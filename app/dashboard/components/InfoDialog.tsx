@@ -25,7 +25,7 @@ import {
             This is a learning project built with modern web technologies.
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4">
+        <div className="py-4 bg-gray-500">
           <h3 className="font-semibold mb-2">Technologies Used:</h3>
           <ul className="list-disc list-inside space-y-1 ml-15 text-sm max-w-md">
             <li>Next.js 15</li>
